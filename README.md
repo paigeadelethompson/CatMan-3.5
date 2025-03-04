@@ -1,5 +1,7 @@
 # Mr. CatMan's Language Model 🐱
 
+- real/ directory contains GPT-2 model, I had to keep this though 
+
 A special language model interface designed for Mr. CatMan! This application provides a cat-friendly interface to interact with a language model that understands feline communication.
 
 ## Features
