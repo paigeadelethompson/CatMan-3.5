@@ -1,0 +1,45 @@
+model:
+  base_model: "gpt2"  # We'll start with GPT-2 as base and fine-tune it
+  model_type: "causal"
+  max_length: 512
+  vocab_size: 50257  # Standard GPT-2 vocab size
+
+training:
+  batch_size: 8
+  gradient_accumulation_steps: 4
+  learning_rate: 2e-5
+  warmup_steps: 100
+  num_epochs: 10
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  save_steps: 1000
+  eval_steps: 500
+
+data:
+  train_file: "data/cat_training_data.json"
+  validation_file: "data/cat_validation_data.json"
+  test_file: "data/cat_test_data.json"
+  text_column: "text"
+  label_column: "labels"
+
+cat_specific:
+  behavior_categories:
+    - "feeding"
+    - "play"
+    - "rest"
+    - "grooming"
+    - "social"
+    - "health"
+    - "environment"
+  context_window: 5  # Number of previous interactions to consider
+  personality_traits:
+    - "curious"
+    - "playful"
+    - "cautious"
+    - "independent"
+  decision_making_factors:
+    - "safety"
+    - "comfort"
+    - "enrichment"
+    - "health"
+    - "social_needs" 

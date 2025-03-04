@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr. CatMan's Language Model 🐱</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background-color: #e3f2fd;
+            margin-left: auto;
+        }
+
+        .cat-message {
+            background-color: #f5f5f5;
+            margin-right: auto;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .quick-action-btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            background-color: #2196F3;
+        }
+
+        .cat-avatar {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            background-color: #ffebee;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cat-avatar">🐱</div>
+        <h1>Mr. CatMan's Language Model</h1>
+        
+        <div class="chat-container" id="chatContainer">
+            <div class="message cat-message">
+                *stretches and purrs* Meow! How can I help you today? 😺
+            </div>
+        </div>
+
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Type your message to Mr. CatMan..." 
+                   onkeypress="if(event.key === 'Enter') sendMessage()">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+
+        <div class="quick-actions">
+            <button class="quick-action-btn" onclick="quickAction('meow')">Meow</button>
+            <button class="quick-action-btn" onclick="quickAction('food')">Food Time</button>
+            <button class="quick-action-btn" onclick="quickAction('play')">Play Time</button>
+            <button class="quick-action-btn" onclick="quickAction('sleep')">Sleepy Time</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user-message');
+            input.value = '';
+
+            // Send to backend
+            const formData = new FormData();
+            formData.append('input', message);
+            
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                addMessage(data.response, 'cat-message');
+            } catch (error) {
+                addMessage('*looks confused* Meow? (Something went wrong)', 'cat-message');
+            }
+        }
+
+        function quickAction(action) {
+            const actions = {
+                'meow': 'Meow meow!',
+                'food': 'I\'m hungry!',
+                'play': 'Let\'s play!',
+                'sleep': 'I\'m feeling sleepy...'
+            };
+            document.getElementById('userInput').value = actions[action];
+            sendMessage();
+        }
+
+        function addMessage(text, className) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`;
+            messageDiv.textContent = text;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html> 
